@@ -15,6 +15,8 @@ const router = express.Router();
  */
 router.get('/', chatBotController.ping);
 
+router.get('/:userId', chatBotController.getChatHistory);
+
 /**
  * @openapi
  * /api/chat-bot:
