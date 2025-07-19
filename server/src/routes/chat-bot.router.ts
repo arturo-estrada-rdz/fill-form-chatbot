@@ -1,6 +1,11 @@
 import express from 'express';
 import { chatBotController } from '../controllers/chat-bot.controller';
 import { handleMethodNotAllowedError } from '../errors/method-not-allowed';
+import {
+  chatbotHistoryValidators,
+  chatbotMessageValidators,
+} from '../validators/chatbot.validators';
+import { validate } from '../validators/validate';
 
 const router = express.Router();
 
@@ -15,7 +20,39 @@ const router = express.Router();
  */
 router.get('/', chatBotController.ping);
 
-router.get('/:userId', chatBotController.getChatHistory);
+/**
+ * @openapi
+ * /api/chat-bot/{userId}:
+ *   get:
+ *     summary: Get chat history for a user
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user's unique identifier
+ *     responses:
+ *       200:
+ *         description: Chat history for the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ChatHistory'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/:userId', validate(chatbotHistoryValidators), chatBotController.getChatHistory);
 
 /**
  * @openapi
@@ -34,13 +71,15 @@ router.get('/:userId', chatBotController.getChatHistory);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 reply:
- *                   type: string
- *                   example: Hello, how can I assist you today?
- *       405:
- *         description: Method Not Allowed
+ *               $ref: '#/components/schemas/ChatResponse'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       400:
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
@@ -52,7 +91,41 @@ router.get('/:userId', chatBotController.getChatHistory);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/', chatBotController.messageChatBot);
+router.post('/', validate(chatbotMessageValidators), chatBotController.messageChatBot);
+
+/**
+ * @openapi
+ * /api/chat-bot/form-data/{userId}:
+ *   get:
+ *     summary: Get form data for a user
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user's unique identifier
+ *     responses:
+ *       200:
+ *         description: User form data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApplicationFormData'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/form-data/:userId', chatBotController.getFormData);
 
 router.all('/', handleMethodNotAllowedError);
 

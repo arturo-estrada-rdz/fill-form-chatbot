@@ -5,10 +5,14 @@ const userDataStore: Record<string, ApplicationFormData> = {};
 const messageDataStore: Record<string, ChatMessage[]> = {};
 
 export const getUserData = (userId: string): ApplicationFormData => {
-  if (!userDataStore[userId]) {
+  if (!userExists(userId)) {
     userDataStore[userId] = {}; // start fresh
   }
   return userDataStore[userId];
+};
+
+export const userExists = (userId: string): boolean => {
+  return !!userDataStore[userId];
 };
 
 export const updateUserData = (
