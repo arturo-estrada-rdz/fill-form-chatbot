@@ -15,7 +15,6 @@
     "prebuild": "npm run clean && npm run generate",
     "build": "tsc --project tsconfig.json",
     "clean": "rimraf 'dist/*' 'node_modules/.cache' 'coverage' 'generated'",
-    "prepare": "husky",
     "generate:swagger": "ts-node src/scripts/swagger-generator.ts",
     "generate": "npm run generate:swagger"
   },
@@ -47,7 +46,6 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "globals": "^16.3.0",
-    "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
