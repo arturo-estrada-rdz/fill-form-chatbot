@@ -1,0 +1,2 @@
+cd server && npm run lint && npm test && npm run build || exit 1
+cd ../client && npm test || exit 1
