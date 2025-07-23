@@ -20,9 +20,9 @@ export class ChatBotController {
       const userFormData = getUserData(userId);
 
       const bot = new VisaChatbotService(userFormData, userId);
-      const reply = await bot.getResponse(message);
+      const result = await bot.getResponse(message);
 
-      res.json({ reply });
+      res.json(result);
     } catch (error) {
       next(error);
     }

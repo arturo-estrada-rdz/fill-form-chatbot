@@ -41,7 +41,7 @@ describe('VisaChatbotService', () => {
       vi.spyOn(openaiClient.chat.completions, 'create').mockResolvedValue(mockResponse as any);
 
       const response = await visaChatbotService.getResponse(userMessage);
-      expect(response).toBe('The visa application process involves...');
+      expect(response.content).toBe('The visa application process involves...');
     });
   });
 
