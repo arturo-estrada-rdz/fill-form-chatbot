@@ -1,8 +1,7 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import {
   addMessage as addMessageToChat,
   clearMessages,
-  fetchChatHistory,
   selectLoading,
   selectMessages,
   sendMessage,
@@ -17,16 +16,12 @@ export function useChatHistory() {
   const storedMessages = useAppSelector(selectMessages);
   const isLoading = useAppSelector(selectLoading);
 
-  useEffect(() => {
-    dispatch(fetchChatHistory(userId));
-  }, [dispatch, userId]);
-
   const addMessage = useCallback(
     (message: string) => {
       const chatMesage: ChatMessage = {
         content: message,
         role: "user",
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
       dispatch(addMessageToChat(chatMesage));
       dispatch(sendMessage({ message, userId }));

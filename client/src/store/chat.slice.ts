@@ -1,7 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { chatbotService } from "../services/chatbot.service";
-import { ChatRole } from "../types/chat.models";
-import { RootState } from "./store.models";
+import { fetchFormData } from "./form.slice";
+import { ChatStoreState, RootState } from "./store.models";
+
+const initialState: ChatStoreState = {
+  messages: [
+    {
+      content:
+        "Hi! How can I dramatically overestimate my usefulness for you today?",
+      role: "assistant",
+      createdAt: new Date().toISOString(),
+    },
+  ],
+  errors: {
+    fetchChatHistory: undefined,
+    sendMessage: undefined,
+  },
+  loading: false,
+};
 
 export const fetchChatHistory = createAsyncThunk(
   "chat/fetchChatHistory",
@@ -13,29 +29,19 @@ export const fetchChatHistory = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
-  async ({ message, userId }: { message: string; userId: string }) => {
+  async (
+    { message, userId }: { message: string; userId: string },
+    { dispatch }
+  ) => {
     const chatMessage = await chatbotService.sendMessage(message, userId);
+    dispatch(fetchFormData(userId));
     return chatMessage;
   }
 );
 
 export const chatSlice = createSlice({
   name: "chat",
-  initialState: {
-    messages: [
-      {
-        content:
-          "Hi! How can I dramatically overestimate my usefulness for you today?",
-        role: "assistant" as ChatRole,
-        createdAt: new Date(),
-      },
-    ],
-    errors: {
-      fetchChatHistory: undefined as string | undefined,
-      sendMessage: undefined as string | undefined,
-    },
-    loading: false,
-  },
+  initialState,
   reducers: {
     addMessage: (state, action) => {
       state.messages.push(action.payload);

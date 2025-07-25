@@ -10,7 +10,7 @@ export const formSteps: (keyof ApplicationFormData)[] = [
   'contactInfo',
 ];
 
-export const fieldPrompts: Record<keyof ApplicationFormData, string> = {
+export const fieldPrompts: Record<keyof Omit<ApplicationFormData, 'status'>, string> = {
   fullName: "What's your full name?",
   dateOfBirth: "What's your date of birth?",
   passportNumber: 'Please enter your passport number.',

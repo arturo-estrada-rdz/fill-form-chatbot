@@ -59,27 +59,6 @@ export class ChatBotController {
       next(error);
     }
   }
-
-  /**
-   * Retrieves the user form data.
-   * @param req - Express request containing userId in params.
-   * @param res - Express response.
-   * @param next - Express next middleware function.
-   */
-  async getFormData(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { userId } = req.params;
-
-      if (!userExists(userId)) {
-        throw new NotFoundError(`User with ID ${userId} not found`);
-      }
-
-      const formData = getUserData(userId);
-      res.json(formData);
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 /**

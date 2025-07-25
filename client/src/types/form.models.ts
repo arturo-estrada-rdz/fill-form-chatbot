@@ -7,3 +7,12 @@ export interface ApplicationForm {
   durationOfStay: string;
   contactInfo: string;
 }
+
+export interface FormSaveResponse {
+  result: boolean;
+}
+
+export type FormThunkParams = {
+  userId: string;
+  form: ApplicationForm;
+};

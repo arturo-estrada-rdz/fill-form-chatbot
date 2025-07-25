@@ -10,8 +10,6 @@ export class ChatbotService {
       });
       const result = response.data;
 
-      result.createdAt = new Date(result.createdAt);
-
       return result;
     } catch (error) {
       console.error("Error sending message:", error);
@@ -25,10 +23,7 @@ export class ChatbotService {
         `/chat-bot/${userId}`
       );
 
-      const result = response.data.map((r) => ({
-        ...r,
-        createdAt: new Date(r.createdAt),
-      }));
+      const result = response.data;
 
       return result;
     } catch (error) {

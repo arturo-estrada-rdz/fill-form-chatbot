@@ -93,40 +93,6 @@ router.get('/:userId', validate(chatbotHistoryValidators), chatBotController.get
  */
 router.post('/', validate(chatbotMessageValidators), chatBotController.messageChatBot);
 
-/**
- * @openapi
- * /api/chat-bot/form-data/{userId}:
- *   get:
- *     summary: Get form data for a user
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's unique identifier
- *     responses:
- *       200:
- *         description: User form data
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApplicationFormData'
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-router.get('/form-data/:userId', chatBotController.getFormData);
-
 router.all('/', handleMethodNotAllowedError);
 
 export default router;

@@ -101,6 +101,11 @@ const components: Components = {
           example: 'john.doe@domain.com',
           description: 'The contact information of the applicant',
         },
+        status: {
+          type: 'string',
+          example: 'submitted',
+          description: 'The status of a user application form',
+        },
       },
     },
   },

@@ -1,3 +1,5 @@
+export type FormStatus = 'draft' | 'submitted';
+
 export interface ApplicationFormData {
   fullName?: string;
   dateOfBirth?: string;
@@ -6,4 +8,5 @@ export interface ApplicationFormData {
   purposeOfVisit?: string;
   durationOfStay?: string;
   contactInfo?: string;
+  status?: FormStatus;
 }

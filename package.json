@@ -4,14 +4,14 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "deps:server": "cd server && npm install && cd ..",
-    "deps:client": "cd client && npm install && cd ..",
+    "deps:server": "cd server && npm install",
+    "deps:client": "cd ../client && npm install",
     "deps": "npm run deps:server && npm run deps:client",
-    "start:server": "cd server && npm run start && cd ..",
-    "start:client": "cd client && npm run start && cd ..",
-    "start": "npm run start:server && npm run start:client",
-    "test:server": "cd server && npm run test && cd ..",
-    "test:client": "cd client && npm run test && cd ..",
+    "start:server": "cd server && npm run start",
+    "start:client": "cd client && npm run start",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "test:server": "cd server && npm run test",
+    "test:client": "cd ../client && npm run test",
     "test": "npm run test:server && npm run test:client",
     "ci": "npm run prepare && npm run deps"
   },
@@ -20,6 +20,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "concurrently": "^9.2.0",
     "husky": "^9.1.7"
   }
 }

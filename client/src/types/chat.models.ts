@@ -3,7 +3,7 @@ export type ChatRole = "user" | "assistant";
 export interface ChatMessage {
   content: string;
   role: ChatRole;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface ChatReply {

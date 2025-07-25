@@ -1,5 +1,5 @@
 import { ChatMessage } from '../types/chatbot.models';
-import { ApplicationFormData } from '../types/form-data.models';
+import { ApplicationFormData, FormStatus } from '../types/form-data.models';
 
 const userDataStore: Record<string, ApplicationFormData> = {};
 const messageDataStore: Record<string, ChatMessage[]> = {};
@@ -18,12 +18,21 @@ export const userExists = (userId: string): boolean => {
 export const updateUserData = (
   userId: string,
   field: keyof ApplicationFormData,
-  value: string
+  value: string | FormStatus
 ): void => {
   if (!userDataStore[userId]) {
     userDataStore[userId] = {};
   }
-  userDataStore[userId][field] = value;
+  // If the field is 'status', ensure value is FormStatus
+  if (field === 'status') {
+    if (value === 'draft' || value === 'submitted' || value === undefined) {
+      userDataStore[userId][field] = value as FormStatus;
+    } else {
+      throw new Error(`Invalid status value: ${value}`);
+    }
+  } else {
+    userDataStore[userId][field] = value;
+  }
 };
 
 export const clearUserData = (userId: string): void => {

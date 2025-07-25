@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Row } from "react-bootstrap";
 import { ChatMessage } from "../../types/chat.models";
 
@@ -6,8 +7,21 @@ interface ChatListProps {
 }
 
 export const ChatListComponent = ({ messages }: ChatListProps) => {
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="chat-list overflow-auto" style={{ maxHeight: "450px" }}>
+    <div
+      className="chat-list overflow-auto"
+      style={{ maxHeight: "calc(100vh - 160px)" }}
+      ref={messagesContainerRef}
+    >
       {messages.map((message, index) => (
         <Row key={index} className={`chat-message ${message.role}`}>
           <div className="message-content">
@@ -15,7 +29,7 @@ export const ChatListComponent = ({ messages }: ChatListProps) => {
             {message.content}
           </div>
           <div className="message-timestamp">
-            {message.createdAt.toLocaleTimeString()}
+            {new Date(message.createdAt).toLocaleTimeString()}
           </div>
         </Row>
       ))}
