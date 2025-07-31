@@ -4,6 +4,7 @@ import { UnhandledError } from '../errors/unhandled.error';
 import { ChatMessage } from '../types/chatbot.models';
 import { ApplicationFormData } from '../types/form-data.models';
 import { formSteps } from '../utils/form.utility';
+import { hbsCompiler } from '../utils/hbs-compile.utility';
 
 /**
  * Service for managing visa chatbot interactions.
@@ -31,18 +32,10 @@ export class VisaChatbotService {
    * @returns Partial form data extracted from the message.
    */
   private async extractDataFromMessage(userMessage: string): Promise<Partial<ApplicationFormData>> {
-    const extractPrompt = `
-      - You are a data extraction AI. Given the following user's message and conversation, extract any visa application fields present: ${formSteps.join(', ')}
-      - This is the context of the conversation so far: 
-      ${this.messages.map((m) => `${m.role}: ${m.content}`).join('\n')}
-      - So far, the user has provided: 
-      ${JSON.stringify(this.formData, null, 2)}
-      - ONLY return a JSON object with the fields and values found, or {} if none.
-      - If the user provides a date of birth, convert it to ISO format (YYYY-MM-DD).
-      - If the user gives a reason for visiting, classify it strictly as either 'business' or 'pleasure'. Be flexible — if they say they're here for vacation, fun, partying, or sightseeing, label it as 'pleasure'. If they say meetings, work, training, or conferences, label it as 'business'.
-      - Do not include any explanations, just the JSON object.
-      - Do not answer, do not comment.
-    `;
+    const extractPrompt = await hbsCompiler('system.prompt.md', 'system-prompts', {
+      conversation: this.messages.map((m) => `${m.role}: ${m.content}`).join('\n'),
+      formData: JSON.stringify(this.formData, null, 2),
+    });
 
     const completion = await openaiClient.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -67,15 +60,10 @@ export class VisaChatbotService {
    * @returns Assistant chat message.
    */
   private async getSystemReply(): Promise<ChatMessage> {
-    const systemPrompt = `
-      - You are a helpful but snarky assistant collecting visa application data.
-      - You answer questions with wit, sarcasm, and a bit of attitude — but you're never rude or offensive. Think of a sarcastic airline gate agent who's been doing this too long.
-      - Your task is to guide the user through the following fields one by one: ${formSteps.join(', ')}
-      - So far, the user has provided: ${JSON.stringify(this.formData, null, 2)}
-      - If the user asks a question, explain clearly.
-      - Ask for one missing field at a time. Be clear, but don’t miss the chance to roast the user if they’re being slow or clueless.
-      - Once the information is complete, make sure to provide a summary of the information for review.
-    `;
+    const systemPrompt = await hbsCompiler('form-assistant.prompt.md', 'system-prompts', {
+      formSteps: formSteps.join(', '),
+      formData: JSON.stringify(this.formData, null, 2),
+    });
 
     const chat = await openaiClient.chat.completions.create({
       model: 'gpt-3.5-turbo',
