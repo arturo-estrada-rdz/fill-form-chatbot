@@ -1,5 +1,4 @@
 import { getUserData, updateUserData, userExists } from '../data/data-store';
-import { NotFoundError } from '../errors/not-found.error';
 import { ApplicationFormData } from '../types/form-data.models';
 
 export class ApplicationFormService {
@@ -27,7 +26,7 @@ export class ApplicationFormService {
 
   async getFormData(userId: string) {
     if (!userExists(userId)) {
-      throw new NotFoundError(`User with ID ${userId} not found`);
+      console.info(`User id ${userId} not found, crating new record`);
     }
 
     const formData = getUserData(userId);

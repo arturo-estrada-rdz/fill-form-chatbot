@@ -1,17 +1,16 @@
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Form, FormControl } from "react-bootstrap";
 import { useApplicationForm } from "../../hooks/use-application-form";
 
 export const ApplicationFormComponent = () => {
-  const { form, handleChange, handleSubmit, isLoading } = useApplicationForm();
   const {
-    fullName,
-    dateOfBirth,
-    passportNumber,
-    nationality,
-    purposeOfVisit,
-    durationOfStay,
-    contactInfo,
-  } = form;
+    register,
+    handleSubmit,
+    changeHandler,
+    isLoading,
+    formErrors,
+    formValid,
+    formValues,
+  } = useApplicationForm();
 
   return (
     <Card style={{ width: "100%" }}>
@@ -23,10 +22,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="Enter first name"
-              name="fullname"
-              value={fullName}
-              onChange={handleChange}
+              isInvalid={!!formErrors.fullName}
+              isValid={!!formValues?.fullName}
+              {...register("fullName", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.fullName && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.fullName.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="dateOfBirth">
@@ -34,10 +41,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="1991-01-01"
-              name="dateOfBirth"
-              value={dateOfBirth}
-              onChange={handleChange}
+              isInvalid={!!formErrors.dateOfBirth}
+              isValid={!!formValues?.dateOfBirth}
+              {...register("dateOfBirth", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.dateOfBirth && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.dateOfBirth.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="dateOfBirth">
@@ -45,10 +60,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="AB1234567"
-              name="passportNumber"
-              value={passportNumber}
-              onChange={handleChange}
+              isInvalid={!!formErrors.passportNumber}
+              isValid={!!formValues?.passportNumber}
+              {...register("passportNumber", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.passportNumber && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.passportNumber.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="nationality">
@@ -56,10 +79,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="Enter your nationality"
-              name="nationality"
-              value={nationality}
-              onChange={handleChange}
+              isInvalid={!!formErrors.nationality}
+              isValid={!!formValues?.nationality}
+              {...register("nationality", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.nationality && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.nationality.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="purposeOfVisit">
@@ -67,10 +98,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="Purpose of visit e.g. Tourism, Business"
-              name="purposeOfVisit"
-              value={purposeOfVisit}
-              onChange={handleChange}
+              isInvalid={!!formErrors.purposeOfVisit}
+              isValid={!!formValues.purposeOfVisit}
+              {...register("purposeOfVisit", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.purposeOfVisit && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.purposeOfVisit.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="durationOfStay">
@@ -78,10 +117,18 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="Duration of stay in days"
-              name="durationOfStay"
-              value={durationOfStay}
-              onChange={handleChange}
+              isInvalid={!!formErrors.durationOfStay}
+              isValid={!!formValues?.durationOfStay}
+              {...register("durationOfStay", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.durationOfStay && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.durationOfStay.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="contactInfo">
@@ -89,13 +136,21 @@ export const ApplicationFormComponent = () => {
             <Form.Control
               type="text"
               placeholder="Enter your email or phone number"
-              name="contactInfo"
-              value={contactInfo}
-              onChange={handleChange}
+              isInvalid={!!formErrors.contactInfo}
+              isValid={!!formValues?.contactInfo}
+              {...register("contactInfo", {
+                required: "This field is required",
+                onChange: changeHandler,
+              })}
             />
+            {formErrors.contactInfo && (
+              <FormControl.Feedback type="invalid">
+                {formErrors.contactInfo.message}
+              </FormControl.Feedback>
+            )}
           </Form.Group>
 
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading || !formValid}>
             Submit form
           </Button>
         </Form>
